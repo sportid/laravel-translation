@@ -199,7 +199,7 @@ class Translation
                     ->first()
                     ->toJson();
 
-                $this->query('https://api.poeditor.com/v2/translations/update', [
+                $this->query('https://api.poeditor.com/v2/languages/update', [
                     'form_params' => [
                         'api_token' => $this->apiKey,
                         'id' => $this->projectId,
