@@ -143,7 +143,7 @@ php artisan translation:upload {--translations=all : Upload translations for lan
 
 To download languages from poeditor run this command:
 ```bash
-php artisan translation:download
+php artisan translation:download {--skip-trimming : Whether translation trimming should be skipped}
 ``` 
 
 **Create JS language files**
