@@ -20,6 +20,7 @@ class Translation
     protected $projectId;
     protected $baseLanguage;
     protected $baseFilename;
+    protected $skipTrimming;
 
     public function __construct()
     {
@@ -123,7 +124,10 @@ class Translation
         }
 
         $languages = collect($response['result']['languages']);
-        $languages->each(function ($language) use ($skipTrimming) {
+
+        $this->skipTrimming = $skipTrimming;
+
+        $languages->each(function ($language) {
             $response = $this->query('https://api.poeditor.com/v2/projects/export', [
                 'form_params' => [
                     'api_token' => $this->apiKey,
@@ -134,8 +138,8 @@ class Translation
             ], 'POST');
 
             $content = collect($this->query($response['result']['url']))
-                ->mapWithKeys(function ($entry, $key) use ($skipTrimming) {
-                    if ($skipTrimming) {
+                ->mapWithKeys(function ($entry, $key) {
+                    if ($this->skipTrimming) {
                         return is_array($entry) ? [array_key_first($entry) => array_pop($entry)] : [$key => $entry];
                     }
                     return is_array($entry) ? [trim(array_key_first($entry)) => array_pop($entry)] : [$key => trim($entry)];
