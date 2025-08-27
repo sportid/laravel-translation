@@ -20,6 +20,7 @@ class Translation
     protected $projectId;
     protected $baseLanguage;
     protected $baseFilename;
+    protected $skipTrimming;
 
     public function __construct()
     {
@@ -108,7 +109,7 @@ class Translation
         return $translations->count();
     }
 
-    public function download(): Collection
+    public function download($skipTrimming = false): Collection
     {
         try {
             $this->setupPoeditorCredentials();
@@ -123,6 +124,9 @@ class Translation
         }
 
         $languages = collect($response['result']['languages']);
+
+        $this->skipTrimming = $skipTrimming;
+
         $languages->each(function ($language) {
             $response = $this->query('https://api.poeditor.com/v2/projects/export', [
                 'form_params' => [
@@ -135,6 +139,9 @@ class Translation
 
             $content = collect($this->query($response['result']['url']))
                 ->mapWithKeys(function ($entry, $key) {
+                    if ($this->skipTrimming) {
+                        return is_array($entry) ? [array_key_first($entry) => array_pop($entry)] : [$key => $entry];
+                    }
                     return is_array($entry) ? [trim(array_key_first($entry)) => array_pop($entry)] : [$key => trim($entry)];
                 })
                 ->sortKeys()

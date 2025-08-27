@@ -8,7 +8,8 @@ use Vemcogroup\Translation\Translation;
 
 class Download extends Command
 {
-    protected $signature = 'translation:download';
+    protected $signature = 'translation:download
+                            {--skip-trimming : Whether translation trimming should be skipped}';
     protected $description = 'Download all languages from POEditor';
 
     public function handle(): void
@@ -16,7 +17,7 @@ class Download extends Command
         try {
             $this->info('⬇️  Preparing to download languages');
 
-            $languages = app(Translation::class)->download();
+            $languages = app(Translation::class)->download($this->option('skip-trimming'));
 
             $this->info('⬇️  Finished downloading languages: ' . $languages->implode(', '));
         } catch (Exception $e) {
