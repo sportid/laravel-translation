@@ -18,16 +18,24 @@
         }
     ],
     "require": {
-        "php": "^7.3|^8.0",
+        "php": "^8.2",
         "ext-json": "*",
-        "symfony/finder": "^4.3|^5.0|^6.0|^7.0",
-        "guzzlehttp/guzzle": "^6.3|^7.0",
-        "laravel/framework": "^6.0|^7.0|^8.0|^9.0|^10.0|^11.0|^12.0|^13.0"
+        "symfony/finder": "^6.0|^7.0",
+        "guzzlehttp/guzzle": "^7.0",
+        "laravel/framework": "^9.0|^10.0|^11.0|^12.0"
     },
     "autoload": {
         "psr-4": {
             "Vemcogroup\\Translation\\": "src/"
         }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\": "tests/"
+        }
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^11.5"
     },
     "config": {
         "sort-packages": true
