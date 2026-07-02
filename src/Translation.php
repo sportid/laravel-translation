@@ -76,7 +76,7 @@ class Translation
             }
         }
 
-        $collapsedKeys = collect($allMatches)->collapse();
+        $collapsedKeys = $this->normalizeScannedKeys(collect($allMatches)->collapse());
         $keys = $collapsedKeys->combine($collapsedKeys);
 
         if ($mergeKeys) {
@@ -244,8 +244,33 @@ class Translation
     protected function getFileContent(): Collection
     {
         return file_exists($this->baseFilename)
-            ? collect(json_decode(file_get_contents($this->baseFilename), true))
+            ? $this->normalizeStoredTranslations(collect(json_decode(file_get_contents($this->baseFilename), true)))
             : collect();
+    }
+
+    protected function normalizeScannedKeys(Collection $keys): Collection
+    {
+        return $keys->map(function ($key) {
+            return $this->normalizeTranslationKey($key);
+        });
+    }
+
+    protected function normalizeStoredTranslations(Collection $translations): Collection
+    {
+        return $translations->mapWithKeys(function ($value, $key) {
+            $normalizedKey = $this->normalizeTranslationKey($key);
+
+            if (is_string($value)) {
+                $value = $this->normalizeTranslationKey($value);
+            }
+
+            return [$normalizedKey => $value];
+        });
+    }
+
+    protected function normalizeTranslationKey(string $value): string
+    {
+        return preg_replace('/\\\\([\'"\\\\`])/', '$1', $value);
     }
 
     protected function getTranslations(?array $languages = null): Collection

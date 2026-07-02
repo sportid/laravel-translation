@@ -117,6 +117,8 @@ php artisan translation:scan {--merge : Whether the job should overwrite or merg
 
 The command creates your `base_language` .json file in `/resources/lang`
 
+The scanner normalizes escaped quotes in string literals, so both `__('yes, I\'m sure')` and `__("yes, I'm sure")` end up as the same JSON key.
+
 **Add terms**
 
 To only add your terms run this command:
